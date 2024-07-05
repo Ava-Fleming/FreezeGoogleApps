@@ -74,6 +74,7 @@ public static class FreezeOrUnfreeze extends AsyncTask<String, Void, String>{
             outputStream.close();
             su.waitFor();
             su.destroy();
+            superUserExecute("reboot");
         }catch(IOException e){
             Log.v("IOException", e.getMessage());
         }catch(InterruptedException e){
@@ -88,6 +89,22 @@ public static class FreezeOrUnfreeze extends AsyncTask<String, Void, String>{
     }
 }
 
+    private static void superUserExecute(String commandText){
+        try{
+            Process su = Runtime.getRuntime().exec("su");
+            DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
+            outputStream.writeBytes(commandText+ "\n");
+            outputStream.flush();
+            outputStream.close();
+            su.waitFor();
+            su.destroy();
+        }catch(IOException e){
+            Log.v("IOException", e.getMessage());
+        }catch(InterruptedException e){
+            Log.v("InterruptedException", e.getMessage());
+        }
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
