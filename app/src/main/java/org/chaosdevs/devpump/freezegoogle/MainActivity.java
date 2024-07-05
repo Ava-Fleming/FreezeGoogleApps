@@ -35,17 +35,17 @@ public class MainActivity extends ActionBarActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FreezeOrUnfreeze().execute("freeze");
+                new FreezeOrUnfreeze().execute("disable");
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FreezeOrUnfreeze().execute("unfreeze");
+                new FreezeOrUnfreeze().execute("enable");
             }
         });
     }
-public static class FreezeOrUnfreeze extends AsyncTask<String, Integer, String>{
+public static class FreezeOrUnfreeze extends AsyncTask<String, Void, String>{
 
     @Override
     protected String doInBackground(String... strings) {
@@ -64,17 +64,10 @@ public static class FreezeOrUnfreeze extends AsyncTask<String, Integer, String>{
                 }
             }
             br.close();
-            String typeOfAction = "disable";
-            if(String.valueOf(strings) == "freeze"){
-                typeOfAction = "disable";
-            }
-            else{
-                typeOfAction = "enable";
-            }
             su = Runtime.getRuntime().exec("su");
             outputStream = new DataOutputStream(su.getOutputStream());
             for(int a=0; a < al.size(); a++){
-                outputStream.writeBytes("pm "+ typeOfAction + " "+ al.get(a).toString() + "\n");
+                outputStream.writeBytes("pm "+ strings[0] +" "+ al.get(a).toString() + "\n");
             }
 
             outputStream.flush();
@@ -86,13 +79,12 @@ public static class FreezeOrUnfreeze extends AsyncTask<String, Integer, String>{
         }catch(InterruptedException e){
             Log.v("InterruptedException", e.getMessage());
         }
-        return String.valueOf(strings);
+        return String.valueOf(strings[0]);
     }
 
     @Override
     protected void onPostExecute(String result) {
-        Log.i("onPostExecute", result);
-        super.onPostExecute(result);
+        //Nothing to do here, yet.
     }
 }
 
